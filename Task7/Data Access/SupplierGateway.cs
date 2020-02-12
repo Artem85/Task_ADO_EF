@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using Task7.Common;
+using Task7.Models;
 
 namespace Task7.Data_Access
 {
     class SupplierGateway : IDataGateway<Supplier>
     {
-        private readonly string connString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
+        private readonly string connectionString;
+
+        public SupplierGateway(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public void Delete(Supplier item)
         {
-            string query = "DELETE FROM Supplier WHERE SupplieryId = @id";
+            string query = "DELETE FROM Suppliers WHERE SupplieryId = @id";
             int id = item.SupplierId;
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -36,10 +41,10 @@ namespace Task7.Data_Access
 
         public void Insert(Supplier item)
         {
-            string query = "INSERT INTO Supplier VALUES (@name)";
+            string query = "INSERT INTO Suppliers VALUES (@name)";
             string name = item.Name;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -62,8 +67,8 @@ namespace Task7.Data_Access
         public IEnumerable<Supplier> SelectAll()
         {
             var retVal = new List<Supplier>();
-            string query = "SELECT * FROM Supplier";
-            using (var connection = new SqlConnection(connString))
+            string query = "SELECT * FROM Suppliers";
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = new SqlCommand(query, connection);
@@ -86,9 +91,9 @@ namespace Task7.Data_Access
         public Supplier SelectById(int id)
         {
             var retVal = new Supplier();
-            string query = "SELECT * FROM Supplier WHERE SupplierId = @id";
+            string query = "SELECT * FROM Suppliers WHERE SupplierId = @id";
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -114,11 +119,11 @@ namespace Task7.Data_Access
 
         public void Update(Supplier item)
         {
-            string query = "UPDATE Supplier SET Name = @name WHERE SupplierId = @id";
+            string query = "UPDATE Suppliers SET Name = @name WHERE SupplierId = @id";
             int id = item.SupplierId;
             string name = item.Name;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 

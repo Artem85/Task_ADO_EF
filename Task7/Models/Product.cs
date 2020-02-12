@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task7.Common
+namespace Task7.Models
 {
     class Product
     {

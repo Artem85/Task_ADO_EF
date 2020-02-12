@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using Task7.Common;
+using Task7.Models;
 
 namespace Task7.Data_Access
 {
     class ProductGateway : IDataGateway<Product>
     {
-        private readonly string connString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
+        private readonly string connectionString;
+
+        public ProductGateway(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public void Delete(Product item)
         {
-            string query = "DELETE FROM Product WHERE ProductId = @id";
+            string query = "DELETE FROM Products WHERE ProductId = @id";
             int id = item.ProductId;
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -36,14 +41,14 @@ namespace Task7.Data_Access
 
         public void Insert(Product item)
         {
-            string query = "INSERT INTO Product VALUES (@name, @creationDate, @categoryId, @supplierId, @price)";
+            string query = "INSERT INTO Products VALUES (@name, @creationDate, @categoryId, @supplierId, @price)";
             string name = item.Name;
             DateTime creationDate = item.CreationDate;
             int categoryId = item.CategoryId;
             int supplierId = item.SupplierId;
             decimal price = item.Price;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -75,8 +80,8 @@ namespace Task7.Data_Access
         public IEnumerable<Product> SelectAll()
         {
             var retVal = new List<Product>();
-            string query = "SELECT * FROM Product";
-            using (var connection = new SqlConnection(connString))
+            string query = "SELECT * FROM Products";
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = new SqlCommand(query, connection);
@@ -103,9 +108,9 @@ namespace Task7.Data_Access
         public Product SelectById(int id)
         {
             var retVal = new Product();
-            string query = "SELECT * FROM Product WHERE ProductId = @id";
+            string query = "SELECT * FROM Products WHERE ProductId = @id";
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -135,7 +140,7 @@ namespace Task7.Data_Access
 
         public void Update(Product item)
         {
-            string query = "UPDATE Product " +
+            string query = "UPDATE Products " +
                             "SET Name = @name," +
                             "CreationDate = @creationDate" +
                             "CategoryId = @categoryId" +
@@ -149,7 +154,7 @@ namespace Task7.Data_Access
             int supplierId = item.SupplierId;
             decimal price = item.Price;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 

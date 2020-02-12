@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Data.SqlClient;
 using Task7.Data_Access;
-using Task7.Common;
+using Task7.Models;
+using Task7.Models.Repository;
 
 namespace Task7
 {
@@ -14,7 +15,7 @@ namespace Task7
     {
         static void Main(string[] args)
         {
-            //string adoConnectionString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
+            string adoConnectionString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
 
             //using (SqlConnection connection = new SqlConnection(adoConnectionString))
             //{
@@ -30,11 +31,19 @@ namespace Task7
             //}
             //Console.WriteLine("Connection is closed");
 
-            var categoryGataway = new CategoryGateway();
+            //var categoryGataway = new CategoryGateway(adoConnectionString);
 
             //categoryGataway.Insert(new Category { Name = "Laptop"});
-             
-            var selCat = categoryGataway.SelectAll();
+
+            //var selCat = categoryGataway.SelectAll();
+
+            var efRepository = new Repository();
+            IEnumerable<Category> cats = efRepository.Categories;
+
+            foreach (Category cat in cats)
+            {
+                Console.WriteLine($"CategoryId = {cat.CategoryId}, Name '{cat.Name}'");
+            }
 
             Console.ReadKey();
         }

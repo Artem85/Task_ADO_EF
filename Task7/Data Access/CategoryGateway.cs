@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using Task7.Common;
+using Task7.Models;
 
 namespace Task7.Data_Access
 {
     class CategoryGateway : IDataGateway<Category>
     {
-        private readonly string connString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
+        private readonly string connectionString;
+        
+        public CategoryGateway(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public void Delete(Category item)
         {
-            string query = "DELETE FROM Category WHERE CategoryId = @id";
+            string query = "DELETE FROM Categories WHERE CategoryId = @id";
             int id = item.CategoryId;
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -36,10 +41,10 @@ namespace Task7.Data_Access
 
         public void Insert(Category item)
         {
-            string query = "INSERT INTO Category VALUES (@name)";
+            string query = "INSERT INTO Categories VALUES (@name)";
             string name = item.Name;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -62,8 +67,8 @@ namespace Task7.Data_Access
         public IEnumerable<Category> SelectAll()
         {
             var retVal = new List<Category>();
-            string query = "SELECT * FROM Category";
-            using (var connection = new SqlConnection(connString))
+            string query = "SELECT * FROM Categories";
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 var command = new SqlCommand(query, connection);
@@ -86,9 +91,9 @@ namespace Task7.Data_Access
         public Category SelectById(int id)
         {
             var retVal = new Category();
-            string query = "SELECT * FROM Category WHERE CategoryId = @id";
+            string query = "SELECT * FROM Categories WHERE CategoryId = @id";
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
@@ -114,11 +119,11 @@ namespace Task7.Data_Access
 
         public void Update(Category item)
         {
-            string query = "UPDATE Category SET Name = @name WHERE CategoryId = @id";
+            string query = "UPDATE Categories SET Name = @name WHERE CategoryId = @id";
             int id = item.CategoryId;
             string name = item.Name;
 
-            using (var connection = new SqlConnection(connString))
+            using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
