@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Task7.Models
 {
-    class Supplier
+    public class Supplier
     {
         public int SupplierId { get; set; }
         public string Name { get; set; }
         public string City { get; set; }
+
+        public List<Product> Products { get; set; }
     }
 }

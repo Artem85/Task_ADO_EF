@@ -54,10 +54,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data Access\Repository\AdoRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Repository\DbInitializer.cs" />
     <Compile Include="Models\Repository\EfDbContext.cs" />
-    <Compile Include="Models\Repository\Repository.cs" />
+    <Compile Include="Models\Repository\EfRepository.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Data Access\CategoryGateway.cs" />
     <Compile Include="Data Access\Interfaces\IDataGateway.cs" />

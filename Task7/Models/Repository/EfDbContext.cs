@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Task7.Models.Repository
 {
-    class EfDbContext : DbContext
+    public class EfDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }

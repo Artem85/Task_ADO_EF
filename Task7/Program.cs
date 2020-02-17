@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
-using System.Data.SqlClient;
-using Task7.Data_Access;
-using Task7.Models;
 using Task7.Models.Repository;
+using Task7.Interfaces;
 
 namespace Task7
 {
@@ -15,34 +8,61 @@ namespace Task7
     {
         static void Main(string[] args)
         {
-            string adoConnectionString = ConfigurationManager.ConnectionStrings["ADOConnection"].ConnectionString;
-
-            //using (SqlConnection connection = new SqlConnection(adoConnectionString))
-            //{
-            //    connection.Open();
-            //    Console.WriteLine("Connection is opened");
-
-            //    Console.WriteLine("\tConnectionString: {0}", connection.ConnectionString);
-            //    Console.WriteLine("\tDatabase: {0}", connection.Database);
-            //    Console.WriteLine("\tDataSource: {0}", connection.DataSource);
-            //    Console.WriteLine("\tServerVersion: {0}", connection.ServerVersion);
-            //    Console.WriteLine("\tState: {0}", connection.State);
-            //    Console.WriteLine("\tWorkstationld: {0}", connection.WorkstationId);
-            //}
-            //Console.WriteLine("Connection is closed");
-
-            //var categoryGataway = new CategoryGateway(adoConnectionString);
-
-            //categoryGataway.Insert(new Category { Name = "Laptop"});
-
-            //var selCat = categoryGataway.SelectAll();
-
-            var efRepository = new Repository();
-            IEnumerable<Category> cats = efRepository.Categories;
-
-            foreach (Category cat in cats)
+            using (EfDbContext context = new EfDbContext())
             {
-                Console.WriteLine($"CategoryId = {cat.CategoryId}, Name '{cat.Name}'");
+                var dbContext = new EfDbContext();
+
+                DbInitializer.Initialize(context);
+
+                IRepository repository = new EfRepository(context);
+
+                var suppliers = repository.SuppliersForCategory("Phone");
+                Console.WriteLine("Phone Suppliers:");
+                Console.WriteLine("----------------------------------");
+                foreach (var supplier in suppliers)
+                {
+                    Console.WriteLine($"Supplier: {supplier.Name}\n" +
+                                    $"\tCity: {supplier.City}");
+                    //Console.WriteLine("----------------------------------");
+                }
+
+                var products = repository.ProductsForCategory("Phone");
+                Console.WriteLine("");
+                Console.WriteLine("Phones:");
+                Console.WriteLine("----------------------------------");
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"Product: {product.Name}\n" +
+                                    $"\tPrice: {product.Price}\n" +
+                                    $"\tSupplier: {product.Supplier.Name}\n" +
+                                    $"\tCity: {product.Supplier.City}");
+                    //Console.WriteLine("----------------------------------");
+                }
+
+                products = repository.ProductsOfSupplier("Samsung");
+                Console.WriteLine("");
+                Console.WriteLine("Samsung Products:");
+                Console.WriteLine("----------------------------------");
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"Product: {product.Name}\n" +
+                                    $"\tCategory: {product.Category.Name}\n" +
+                                    $"\tPrice: {product.Price}");
+                    //Console.WriteLine("----------------------------------");
+                }
+
+                products = repository.ProductsByConditions(maxPrice: 600, supplierCity:"Seoul");
+                Console.WriteLine("");
+                Console.WriteLine("Products From Seoul whith price less than or equal 600:");
+                Console.WriteLine("----------------------------------");
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"Product: {product.Name}\n" +
+                                    $"\tCategory: {product.Category.Name}\n" +
+                                    $"\tPrice: {product.Price}\n" +
+                                    $"\tSupplier: {product.Supplier.Name}");
+                    //Console.WriteLine("----------------------------------");
+                }
             }
 
             Console.ReadKey();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task7.Models
 {
-    class Product
+    public class Product
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
@@ -14,5 +14,8 @@ namespace Task7.Models
         public int CategoryId { get; set; }
         public int SupplierId { get; set; }
         public decimal Price { get; set; }
+
+        public Category Category { get; set; }
+        public Supplier Supplier { get; set; }
     }
 }
